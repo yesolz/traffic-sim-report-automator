@@ -3,6 +3,7 @@ import subprocess
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import os
+import sys
 
 # 📌 감시할 디렉토리 설정 (Excel 파일 저장 위치)
 WATCH_DIRECTORY = os.path.join(os.path.dirname(__file__), "server", "data")
@@ -37,12 +38,42 @@ class ExcelFileHandler(FileSystemEventHandler):
 
     def run_python_server(self, base_name):
         print(f"🔄 Python 리포팅 서버 실행 중... (파일: {base_name})")
-        process = subprocess.run(
-            ["poetry", "run", "uvicorn", "server.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000", f"--base_name={base_name}"],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        
+        # 환경 변수에 BASE_NAME 저장
+        env = os.environ.copy()
+        env["BASE_NAME"] = base_name
+
+        # `uvicorn` 실행 시 환경 변수를 사용하도록 설정
+        process = subprocess.Popen(
+            ["poetry", "run", "uvicorn", "server.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000"],
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1  # 한 줄씩 출력
         )
-        print(f"📝 서버 로그 출력:\n{process.stdout}")
-        print(f"⚠️ 서버 오류 로그:\n{process.stderr}")
+
+        # stdout & stderr을 실시간으로 읽어서 출력
+        while True:
+            output = process.stdout.readline()
+            if output:
+                print(f"📝 서버 로그: {output.strip()}")
+                sys.stdout.flush()  # 즉시 출력
+            
+            error = process.stderr.readline()
+            if error:
+                if "ERROR" in error or "CRITICAL" in error:
+                    print(f"⚠️ 서버 오류: {error.strip()}")  # 진짜 오류
+                else:
+                    print(f"📝 서버 로그: {error.strip()}")  # INFO, DEBUG는 일반 로그로 출력
+                sys.stdout.flush()  # 즉시 출력
+            
+            # 프로세스 종료 감지
+            if process.poll() is not None:
+                break
+
+        process.stdout.close()
+        process.stderr.close()
 
 
 if __name__ == "__main__":
