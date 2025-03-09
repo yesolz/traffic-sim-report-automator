@@ -1,0 +1,196 @@
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+h1 {
+  font-weight: 700;
+  line-height: 40px;
+  font-size: 26px;
+}
+
+h2 {
+  position: relative;
+  font-weight: 400;
+  padding: 2px 18px;
+  font-size: 22px;
+  margin: 25px 0 15px 0;
+}
+
+h2::before {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 100%;
+  top: -2px;
+  left:0;
+  background-color: #00C5C0;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 15px 0 10px 0;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+#container {
+  width: 100%;
+  max-width: 882px;
+  padding: 0 10px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+
+/* header Part */
+#docs-id { 
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 13px;
+}
+
+#publish { 
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 13px;
+}
+
+#main-header {
+  position: relative;
+  padding-top:80px;
+  margin-bottom: 25px;
+  font-size: 13px;
+}
+
+#main-header > #docs-info {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  top: 0;
+  left: 0;
+  justify-content: center;
+}
+
+#main-header > h1 > span {
+  color: #00C5C0;
+}
+
+#main-header > #main-img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  position: absolute;
+  right: 0;
+  top: 55px;
+}
+
+/* common report */
+.report-section {
+  margin: 30px 0;
+}
+
+/* simul part */
+.simul-options{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  color: #000000;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+.simul-option {
+  flex: 1 1 1;
+  width: 49%;
+  vertical-align: middle;
+}
+
+.simul-option > .simul-label {
+  display: inline-block;
+  width: 140px;
+  padding: 4px 0;
+  text-align: center;
+  border: 2px solid #8497B0;
+  border-radius: 6px;
+  font-weight: 700;
+  margin: 3px 0;
+  margin-right: 10px;
+}
+
+/* real data part */
+#real-time-data > h3 {
+  text-align: center;
+}
+
+/* chart-container */
+.chart-container {
+  width: 22%;
+  height: 210px;
+}
+
+.real-data-charts {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* common table css */
+table {
+  table-layout: fixed;
+  width: 100%;
+  margin: 10px 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+table td {
+  border: 1px solid black;
+  text-align: center;
+  padding: 4px 0;
+}
+
+table th {
+  border: 1px solid black;
+  padding: 4px 0;
+  background-color: #7BC8EB;
+  color: white;
+}
+
+.down_btn {
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px 0;
+  padding: 10px 18px;
+  border-radius: 4px;
+  background: #222;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  line-height: 20px;
+  letter-spacing: 1px;
+}
+.down_btn:hover{
+  box-shadow:1px 1px 4px rgba(0,0,0,0.4);
+}

@@ -1,0 +1,118 @@
+{
+    "simulationSettings": {
+        "ScenarioName": "03_bicycle_slow_evasion",
+        "NetworkFileName": "sang-am_0801",
+        "LosName": "E",
+        "RandomSeed": 42,
+        "SimulationResolution": 10,
+        "SimulationBreakAt": 0,
+        "SimulationPeriod": 600
+    },
+    "accidentRiskData": [
+        {
+            "title": "Signal_Compliance",
+            "drivingTime": 21.5,
+            "rows": {
+                "OverSignalCompliance": "True",
+                "TrafficSignalCompliance": 0.0,
+                "PassedInAmber": false,
+                "OverSignalComplianceTime": 0.0
+            }
+        },
+        {
+            "title": "Speed_Compliance",
+            "drivingTime": 21.5,
+            "rows": {
+                "OverSpeed": false,
+                "OverSpeedProportion": 0.7395,
+                "SpeedLimitCompliance": 830,
+                "OverSpeedTime": 5.6
+            }
+        },
+        {
+            "title": "Safetydistance_Compliance",
+            "drivingTime": 21.5,
+            "rows": {
+                "OverSafetyDistance": "False",
+                "SafetyDistanceProportion": 0.9488,
+                "ConsiderWeightSafetyDistanceProportion": 0.9488,
+                "OverSafetyDistanceTime": 1.1
+            }
+        },
+        {
+            "title": "Gap_Analysis",
+            "drivingTime": 21.5,
+            "rows": {
+                "LaneEncroachment": 0,
+                "LaneEncroachmentTime": 0
+            }
+        },
+        {
+            "title": "Nearspeed_Analysis",
+            "drivingTime": 21.5,
+            "rows": {
+                "EgoLeadTargetType": "VEHICLE",
+                "AheadSpeed": 33.0,
+                "EgoSpeedDifference": 14.52
+            }
+        },
+        {
+            "title": "Lanechange_Analysis",
+            "drivingTime": 21.5,
+            "rows": {
+                "LaneChanged": 1,
+                "LaneChangedTime": 0.1,
+                "LaneChangeCompliance": true,
+                "PICUD_Violation": "차선변경 거리 확보 준수"
+            }
+        },
+        {
+            "title": "Decel_Based",
+            "drivingTime": 21.5,
+            "rows": {
+                "DRAC": 622.14,
+                "RCRI": 0.0,
+                "CPI": 0.3,
+                "HardBrake": 1
+            }
+        },
+        {
+            "title": "Time_Based",
+            "drivingTime": 21.5,
+            "rows": {
+                "TTC": 3.35,
+                "MTTC": 3.51,
+                "PET": 0.1,
+                "Headway": 0.57
+            }
+        },
+        {
+            "title": "V_Based",
+            "drivingTime": 21.5,
+            "rows": {
+                "DeltaV": 7.85,
+                "CrashIndex": 1648635.91
+            }
+        }
+    ],
+    "otherData": [
+        {
+            "title": "Traffic_Efficiency",
+            "drivingTime": 21.5,
+            "rows": {
+                "Delay": 19.26,
+                "Speed": 47.96,
+                "DistanceTraveled": 286.43
+            }
+        },
+        {
+            "title": "Traffic_Environment",
+            "drivingTime": 21.5,
+            "rows": {
+                "Nox": 0.53,
+                "CO": 0.32,
+                "FuelConsumtion": 0.06
+            }
+        }
+    ]
+}

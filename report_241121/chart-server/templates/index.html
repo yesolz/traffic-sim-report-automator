@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+    <script src="chart.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 템플릿 데이터 주입 받기
+        var sourceData = {{ data["chartData"] | tojson }}
+
+        // 발행시각
+        var publish = document.getElementById("publish");
+        publish.textContent = "발생시작 " + new Date().toLocaleString();
+
+        // Chart Generate
+        function createCharts(chartData, targetElement) {
+          chartData.forEach(function (chartRow) {
+            var chartDiv = document.createElement("div");
+            chartDiv.className = "chart-container";
+            var chartCanvas = document.createElement("canvas");
+
+            new Chart(chartCanvas, {
+              type: "bar",
+              data: chartRow.data,
+              options: {
+                plugins: {
+                  title: {
+                    display: true,
+                    text: chartRow.title,
+                  },
+                  legend: {
+                    display: false,
+                  },
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+              },
+            });
+            chartDiv.appendChild(chartCanvas);
+            targetElement.appendChild(chartDiv);
+          });
+        }
+
+        // Chart data
+        function chartDataAnalysis(dataTitle) {
+          var nowChartData = sourceData[dataTitle];
+          var objectRow = Object.entries(nowChartData);
+          return objectRow.map(function (props) {
+            var title = props[0];
+            var RawData = props[1];
+
+            var labels = {
+              Speed: ["0~10", "10~20", "20~30", "30~40", "40~"],
+              Acceleration: ["~-4", "-4~0", "0~4", "4~8", "8~"],
+              Headway: ["0~20", "20~40", "40~60", "60~80", "80~"],
+              TTC: ["0~1.2", "1.2~2.4", "2.4~3.6", "3.6~4.8", "4.8~"],
+            };
+            var data = [0, 0, 0, 0, 0];
+
+            var rangeType = {
+              Speed: [10, 20, 30, 40],
+              Acceleration: [-4, 0, 4, 8],
+              Headway: [20, 40, 60, 80],
+              TTC: [1.2, 2.4, 3.6, 4.8],
+            };
+
+            RawData.forEach(function (value) {
+              if (title === "Acceleration") {
+                if (value < rangeType[title][0]) {
+                  data[0] = data[0] + 1;
+                  return;
+                }
+              } else {
+                if (value < rangeType[title][0] && 0 < value) {
+                  data[0] = data[0] + 1;
+                  return;
+                }
+              }
+              if (value < rangeType[title][1]) {
+                data[1] = data[1] + 1;
+                return;
+              }
+              if (value < rangeType[title][2]) {
+                data[2] = data[2] + 1;
+
+                return;
+              }
+              if (value < rangeType[title][3]) {
+                data[3] = data[3] + 1;
+                return;
+              }
+              if (rangeType[title][3] <= value) {
+                data[4] = data[4] + 1;
+              }
+            });
+
+            return {
+              title: title,
+              data: {
+                labels: labels[title],
+                datasets: [
+                  {
+                    data: data,
+                    borderWidth: 1,
+                  },
+                ],
+              },
+            };
+          });
+        }
+
+        // Real Data Table + Chart
+        function generateRealTimeChart() {
+          ["Ego_vehicle", "Around_Vehicle", "Vehicles_in_network"].forEach((title) => {
+            createCharts(chartDataAnalysis(title), document.getElementById(title))
+          })
+        }
+        generateRealTimeChart()
+      });
+    </script>
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- container -->
+    <div id="container">
+      <span id="docs-id">문서확인번호 ▣ AU-VS-101-1 ▣ </span>
+      <span id="publish"></span>
+      <div id="main-header">
+        <h1>
+          법·규제 평가 지표 기반 <br />
+          <span>Macro 시뮬레이션 결과 리포팅</span>
+        </h1>
+        <img src="./image/photo.png" id="main-img" />
+      </div>
+      <div>
+        <h2>Simulation Settings</h2>
+        <div class="simul-options">
+          <div class="simul-option">
+            <span class="simul-label">시나리오(XOSC)</span>
+            <span>{{ data["simulationSettings"]["ScenarioName"] }}</span>
+          </div>
+          <div class="simul-option">
+            <span class="simul-label">Random Seed</span>
+            <span>{{ data["simulationSettings"]["RandomSeed"] }}</span>
+          </div>
+          <div class="simul-option">
+            <span class="simul-label">Map(XODR)</span>
+            <span>{{ data["simulationSettings"]["NetworkFileName"] }}</span>
+          </div>
+          <div class="simul-option">
+            <span class="simul-label">Resolution</span>
+            <span
+              >{{ data["simulationSettings"]["SimulationResolution"] }}</span
+            >
+          </div>
+          <div class="simul-option">
+            <span class="simul-label">LOS</span>
+            <span>{{ data["simulationSettings"]["LosName"] }}</span>
+          </div>
+          <div class="simul-option">
+            <span class="simul-label">Break At</span>
+            <span>{{ data["simulationSettings"]["SimulationBreakAt"] }}</span>
+          </div>
+          <div class="simul-option">
+            <span class="simul-label">Period</span>
+            <span>{{ data["simulationSettings"]["SimulationPeriod"] }}</span>
+          </div>
+        </div>
+      </div>
+      <div id="real-time-data">
+        <h2>실시간 data</h2>
+        {% for category, values in data["realTimeData"].items() %}
+        <h3>{{ category }}</h3>
+        <div id="{{ category }}" class="real-data-charts"></div>
+        <!--
+        <table>
+          <colgroup>
+            <col width="18%" />
+            <col width="20%" />
+            <col width="21%" />
+            <col width="21%" />
+            <col width="20%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Ego vehicle</th>
+              <th>Speed [km/h]</th>
+              <th>Acceleration [km/h^2]</th>
+              <th>Headway [m]</th>
+              <th>TTC [s]</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for value in values %}
+            <tr>
+              {% for item in value %}
+              <td>{{ item }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        -->
+        {% endfor %}
+      </div>
+      <!--<div id="legal-metrics">
+        <h2>법규 준수 분석지표</h2>
+        {% for elem in data["legalCompliance"] %}
+        <h3>{{ data["mappingTitle"][elem.title] }}</h3>
+        <table>
+          <colgroup>
+            <col width="31%" />
+            <col width="31%" />
+            <col width="18%" />
+            <col width="20%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Metrics</th>
+              <th>Description</th>
+              <th>Value</th>
+              <th>Ego Driving time[s]</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, value in elem.rows.items() %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ data["mappingDesciption"][key] }}</td>
+              <td>{{ value }}</td>
+              {% if loop.first %}
+              <td rowspan="{{ elem.rows|length }}">{{ elem.drivingTime }}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
+      </div>-->
+      <div id="accident-metrics">
+        <h2>자율차 법규 준수 및 사고 위험도 분석 지표</h2>
+        {% for elem in data["accidentRiskData"] %}
+        <h3>{{ data["mappingTitle"][elem.title] }}</h3>
+        <table>
+          <colgroup>
+            <col width="31%" />
+            <col width="31%" />
+            <col width="18%" />
+            <col width="20%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Metrics</th>
+              <th>Description</th>
+              <th>Value</th>
+              <th>Ego Driving time[s]</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, value in elem.rows.items() %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ data["mappingDesciption"][key] }}</td>
+              <td>{{ value }}</td>
+              {% if loop.first %}
+              <td rowspan="{{ elem.rows|length }}">{{ elem.drivingTime }}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
+      </div>
+      <div id="other-metrics">
+        <h2>교통류 분석지표</h2>
+        {% for elem in data["otherData"] %}
+        <h3>{{ data["mappingTitle"][elem.title] }}</h3>
+        <table>
+          <colgroup>
+            <col width="31%" />
+            <col width="31%" />
+            <col width="18%" />
+            <col width="20%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Metrics</th>
+              <th>Description</th>
+              <th>Value</th>
+              <th>Ego Driving time[s]</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, value in elem.rows.items() %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ data["mappingDesciption"][key] }}</td>
+              <td>{{ value }}</td>
+              {% if loop.first %}
+              <td rowspan="{{ elem.rows|length }}">{{ elem.drivingTime }}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
+      </div>
+      <div id="raw-data">
+        <h2>Raw data</h2>
+        <a href="./data/temp_006.fzp" download="raw-data.fzp" class="down_btn">
+          Download fzp
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
