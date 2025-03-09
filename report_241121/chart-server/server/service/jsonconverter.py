@@ -366,10 +366,10 @@ class json_converter():
         Signal_data = origin["Signal"]
         Signal_data = Signal_data.loc[0]
         Signal_data = {
-            "OverSignalCompliance": "False" if Signal_data["측정 시간 [s]"] != Signal_data["녹색 [s]"] < 1.0 else True,
-            "TrafficSignalCompliance": Signal_data["녹색 [s]"] / Signal_data["측정 시간 [s]"] * 100,
-            "PassedInAmber": False if Signal_data["교차로 진입 시점 황색등 여부"] == 0 else True,
-            "OverSignalComplianceTime": Signal_data["측정 시간 [s]"] - Signal_data["녹색 [s]"]
+            "OverSignalCompliance": Signal_data["녹색 [s]"] < Signal_data["측정 시간 [s]"],
+            "TrafficSignalCompliance": safe_divide(Signal_data["녹색 [s]"], Signal_data["측정 시간 [s]"]) * 100,
+            "PassedInAmber": bool(Signal_data["교차로 진입 시점 황색등 여부"]), 
+            "OverSignalComplianceTime": max(0, Signal_data["측정 시간 [s]"] - Signal_data["녹색 [s]"])
         }
 
         lateralapproach_data = dict()
@@ -410,8 +410,12 @@ class json_converter():
             S = rel_data["안전거리  [m]"]
             # Check for NaN values and skip if any
             
-            PICUD = ((ego_vel ** 2 - tgr_vel ** 2) / (2 * delta_a)) + S - tgr_vel * time_step_length
-            PICUD_data.append(PICUD)
+
+            if delta_a != 0:
+                PICUD = ((ego_vel ** 2 - tgr_vel ** 2) / (2 * delta_a)) + S - tgr_vel * time_step_length
+            else:
+                PICUD = float('inf')  # delta_a가 0이면 PICUD를 무한대로 설정
+
 
             # Check for lane change and determine if the lane change distance is sufficient
             current_lane = raw_speed["차선"].iloc[i]
@@ -510,7 +514,7 @@ class json_converter():
             
 
             # Calculate TTC
-            if delta_a != 0:
+            if delta_a != 0 and (delta_v ** 2 - 2 * delta_a * dist) >= 0:
                 t1 = (-delta_v - (delta_v ** 2 - 2 * delta_a * dist) ** 0.5) / delta_a
                 t2 = (-delta_v + (delta_v ** 2 - 2 * delta_a * dist) ** 0.5) / delta_a
 
@@ -528,21 +532,23 @@ class json_converter():
                 TTC_data.append(TTC)
 
             # Calculate MTTC
+            # 음수 값이 sqrt()로 들어가지 않도록 max(0, 값) 적용
             if delta_a != 0:
-                t1 = (-delta_v - (delta_v ** 2 + 2 * delta_a * dist) ** 0.5) / delta_a
-                t2 = (-delta_v + (delta_v ** 2 + 2 * delta_a * dist) ** 0.5) / delta_a
-
-                if t1 > 0 and t2 > 0:
-                    MTTC = min(t1, t2)
-                elif t1 > 0:
-                    MTTC = t1
-                elif t2 > 0:
-                    MTTC = t2
-                else:
-                    MTTC = 0
+                sqrt_value = max(0, delta_v ** 2 + 2 * delta_a * dist)
+                t1 = (-delta_v - sqrt_value ** 0.5) / delta_a
+                t2 = (-delta_v + sqrt_value ** 0.5) / delta_a
             else:
-                MTTC = dist / delta_v if delta_v > 0 else 0
-            
+                t1, t2 = float('inf'), float('inf')
+
+            if t1 > 0 and t2 > 0:
+                MTTC = min(t1, t2)
+            elif t1 > 0:
+                MTTC = t1
+            elif t2 > 0:
+                MTTC = t2
+            else:
+                MTTC = float('inf')  # NaN 방지
+
             if MTTC > 3.5:
                 MTTC_data.append(MTTC)
 
@@ -606,13 +612,20 @@ class json_converter():
                 DeltaV_data.append(DeltaV)
 
             # Calculate CAI
-            if MTTC > 0:
-                CAI = ((ego_vel + rel_data["가속도  [m/s^2]"] * MTTC) ** 2 - (tgr_vel + tgr_accel[i] * MTTC) ** 2) / (2 * MTTC ** 2)
+            if MTTC > 0 and MTTC != float('inf') and not np.isnan(MTTC):
+                CAI_numerator = (ego_vel + rel_data["가속도  [m/s^2]"] * MTTC) ** 2 - (tgr_vel + tgr_accel[i] * MTTC) ** 2
+                CAI_denominator = 2 * MTTC ** 2
+
+                if CAI_denominator > 0:  # 0으로 나누는 것 방지
+                    CAI = CAI_numerator / CAI_denominator
+                else:
+                    CAI = 0  # 분모가 0이면 안전한 값으로 대체
             else:
-                CAI = 0
-            
+                CAI = 0  # MTTC가 0, inf, NaN이면 CAI는 0
+
             if CAI > 0:
                 CAI_data.append(CAI)
+
 
         # Calculate RCRI
         RCRI = sum(SDI_data) / (max_car_events_per_hour * (analysis_period / 3600) * num_freeway_lanes)
@@ -768,3 +781,7 @@ class json_converter():
     
         print(f"Data successfully saved to {output_path}")
 
+
+def safe_divide(numerator, denominator):
+    """ 0으로 나누는 것을 방지하는 안전한 나눗셈 함수 """
+    return numerator / denominator if denominator != 0 else 0
