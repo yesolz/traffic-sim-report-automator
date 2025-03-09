@@ -1,0 +1,238 @@
+﻿<UserControl x:Class="Simulator.Views.ScenarioView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Simulator.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Background="{StaticResource GrayPannelBackground}">
+
+    <Grid Margin="10" Visibility="{Binding Visible}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="180" MinHeight="180"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Style="{StaticResource TextBlockHeaderStyle}"
+                       Text="Vissim"/>
+            <Border Style="{StaticResource ScenarioBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- #region LOS -->
+
+                    <Label Grid.Column="0"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Content="Level of service: "
+                       Foreground="{StaticResource Label}"/>
+
+                    <CheckBox Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding LosA}"
+                          Content="A"/>
+
+                    <CheckBox Grid.Column="2"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                              Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding LosB}"
+                          Content="B"/>
+
+                    <CheckBox Grid.Column="3"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                              Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding LosC}"
+                          Content="C"/>
+
+                    <CheckBox Grid.Column="4"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                              Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding LosD}"
+                          Content="D"/>
+
+                    <CheckBox Grid.Column="5"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                              Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding LosE}"
+                          Content="E"/>
+
+                    <CheckBox Grid.Column="6"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                              Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding LosF}"
+                          Content="F"/>
+
+                    <!-- #endregion -->
+                </Grid>
+            </Border>
+
+            <Border Margin="0 10 0 0" Style="{StaticResource ScenarioBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="150"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- #region Random Seed -->
+
+                    <Label Grid.Column="0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Content="Random Seed : "
+                           Foreground="{StaticResource Label}"/>
+
+                    <TextBox Grid.Column="1" 
+                             Style="{StaticResource TextBoxStyle}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             HorizontalContentAlignment="Right"
+                             local:SelectAllFocusBehavior.Enable="True"
+                             Text="{Binding RandomSeed}"/>
+
+                    <!-- #endregion -->
+
+                    <!-- #region Break At -->
+
+                    <Label Grid.Column="3"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Content="Break At : "
+                           Foreground="{StaticResource Label}"/>
+
+                    <TextBox Grid.Column="4"
+                             Style="{StaticResource TextBoxStyle}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             HorizontalContentAlignment="Right"
+                             local:SelectAllFocusBehavior.Enable="True"
+                             Text="{Binding BreakAt}"/>
+
+                    <!-- #endregion  -->
+                </Grid>
+            </Border>
+
+            <Border Margin="0 10 0 0" Style="{StaticResource ScenarioBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="150"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- #region Resolution -->
+
+                    <Label Grid.Column="0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Content="Resolution : "
+                           Foreground="{StaticResource Label}"/>
+
+                    <TextBox Grid.Column="1"
+                             Style="{StaticResource TextBoxStyle}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             HorizontalContentAlignment="Right"
+                             local:SelectAllFocusBehavior.Enable="True"
+                             Text="{Binding Resolution}"/>
+
+                    <!-- #endregion -->
+
+                    <!-- #region Period -->
+
+                    <Label Grid.Column="3"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Content="Period : "
+                           Foreground="{StaticResource Label}"/>
+
+                    <TextBox Grid.Column="4"
+                             Style="{StaticResource TextBoxStyle}"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             HorizontalContentAlignment="Right"
+                             local:SelectAllFocusBehavior.Enable="True"
+                             Text="{Binding Period}"/>
+
+                    <!-- #endregion -->
+                </Grid>
+            </Border>
+
+            <Border Margin="0 10 0 0" Style="{StaticResource ScenarioBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="150"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" 
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Content="Use Vissim Network : "
+                           Foreground="{StaticResource Label}"/>
+
+                    <CheckBox Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding UseVissimNetwork}"
+                          Content=""/>
+
+                    <Label Grid.Column="2" Grid.ColumnSpan="2"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Content="Write Row Files : "
+                           Foreground="{StaticResource Label}"/>
+
+                    <CheckBox Grid.Column="4"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Template="{DynamicResource CheckBoxTemplate}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          IsChecked="{Binding WriteRowFiles}"
+                          Content=""/>
+                </Grid>
+            </Border>
+        </StackPanel>
+        
+        
+
+    </Grid>
+</UserControl>

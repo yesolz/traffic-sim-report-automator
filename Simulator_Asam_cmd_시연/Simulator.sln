@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulator", "Simulator\Simulator.csproj", "{BA69DE67-583A-45B5-8ABC-16FA15655EAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Debug|x64.ActiveCfg = Debug|x64
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Debug|x64.Build.0 = Debug|x64
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Release|x64.ActiveCfg = Release|x64
+		{BA69DE67-583A-45B5-8ABC-16FA15655EAC}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D88C0C68-D676-482A-A25E-AE6B6C071587}
+	EndGlobalSection
+EndGlobal
