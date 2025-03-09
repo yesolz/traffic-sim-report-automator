@@ -14,7 +14,7 @@ class ExcelFileHandler(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
             return
-
+        
         file_path = event.src_path
         file_name = os.path.basename(file_path)
 
@@ -25,20 +25,20 @@ class ExcelFileHandler(FileSystemEventHandler):
             # 파일 감지 기록
             if base_name not in detected_files:
                 detected_files[base_name] = set()
-
+            
             detected_files[base_name].add(file_name)
 
             # `_Raw.xlsx`와 `.xlsx` 두 개의 파일이 존재하면 실행
             if f"{base_name}.xlsx" in detected_files[base_name] and f"{base_name}_Raw.xlsx" in detected_files[base_name]:
                 print(f"✅ {base_name}.xlsx & {base_name}_Raw.xlsx 감지 완료! 서버 실행")
-                self.run_python_server()
+                self.run_python_server(base_name)
                 # 실행 후 해당 파일 세트 제거 (다시 감지 가능하도록)
                 del detected_files[base_name]
 
-    def run_python_server(self):
-        print("🔄 Python 리포팅 서버 실행 중...")
+    def run_python_server(self, base_name):
+        print(f"🔄 Python 리포팅 서버 실행 중... (파일: {base_name})")
         process = subprocess.run(
-            ["poetry", "run", "uvicorn", "server.main:app", "--reload"],
+            ["poetry", "run", "uvicorn", "server.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000", f"--base_name={base_name}"],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
         print(f"📝 서버 로그 출력:\n{process.stdout}")
@@ -49,14 +49,14 @@ if __name__ == "__main__":
     event_handler = ExcelFileHandler()
     observer = Observer()
     observer.schedule(event_handler, WATCH_DIRECTORY, recursive=False)
-
+    
     print(f"👀 감시 시작: {WATCH_DIRECTORY}")
     observer.start()
-
+    
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-
+    
     observer.join()
