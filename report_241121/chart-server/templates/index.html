@@ -307,11 +307,39 @@
         </table>
         {% endfor %}
       </div>
+
       <div id="raw-data">
         <h2>Raw data</h2>
-        <a href="./data/temp_006.fzp" download="raw-data.fzp" class="down_btn">
-          Download fzp
+      
+        <!-- .fzp 파일 다운로드 -->
+        {% if download_files["fzp"] %}
+        <a href="/download/{{ download_files['fzp'] }}" download="{{ download_files['fzp'] }}" class="down_btn">
+          Download {{ download_files["fzp"] }}
         </a>
+        {% else %}
+        <p>No .fzp file available.</p>
+        {% endif %}
+      
+        <!-- base_name.xlsx 파일 다운로드 -->
+        {% if download_files["xlsx"] %}
+        <a href="/download/{{ download_files['xlsx'] }}" download="{{ download_files['xlsx'] }}" class="down_btn">
+          Download {{ download_files["xlsx"] }}
+        </a>
+        {% else %}
+        <p>No XLSX file available.</p>
+        {% endif %}
+      
+        <!-- base_name_Raw.xlsx 파일 다운로드 -->
+        {% if download_files["raw_xlsx"] %}
+        <a href="/download/{{ download_files['raw_xlsx'] }}" download="{{ download_files['raw_xlsx'] }}" class="down_btn">
+          Download {{ download_files["raw_xlsx"] }}
+        </a>
+        {% else %}
+        <p>No Raw XLSX file available.</p>
+        {% endif %}
+      </div>
+      
+
       </div>
     </div>
   </body>

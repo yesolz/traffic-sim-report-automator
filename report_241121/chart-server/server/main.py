@@ -74,7 +74,8 @@ async def result(request: Request):
                 "fzp": fzp_file if fzp_file else "",
                 "xlsx": xlsx_file if xlsx_file else "",
                 "raw_xlsx": raw_xlsx_file if raw_xlsx_file else "",
-            }
+            },
+            "base_name": base_name
         })
         return result_html
     except Exception as e:
