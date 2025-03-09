@@ -11,6 +11,10 @@ WATCH_DIRECTORY = os.path.join(os.path.dirname(__file__), "server", "data")
 # 감지된 파일을 저장할 딕셔너리
 detected_files = {}
 
+# 🌎 유저가 접속할 서버 URL (포트는 변경 가능)
+HOST = "127.0.0.1"
+PORT = 8000  # 필요하면 다른 포트로 변경 가능
+
 class ExcelFileHandler(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
@@ -43,9 +47,13 @@ class ExcelFileHandler(FileSystemEventHandler):
         env = os.environ.copy()
         env["BASE_NAME"] = base_name
 
-        # `uvicorn` 실행 시 환경 변수를 사용하도록 설정
+        # 서버 URL 출력
+        server_url = f"http://{HOST}:{PORT}"
+        print(f"🌎 브라우저에서 접근 가능: {server_url}")
+
+        # `uvicorn` 실행
         process = subprocess.Popen(
-            ["poetry", "run", "uvicorn", "server.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000"],
+            ["poetry", "run", "uvicorn", "server.main:app", "--reload", "--host", HOST, "--port", str(PORT)],
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
