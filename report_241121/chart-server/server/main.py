@@ -15,6 +15,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 # 📌 환경 변수에서 base_name 가져오기
 base_name = os.getenv("BASE_NAME")
+fzp_base_name = os.getenv("FZP_BASE_NAME")
 
 if not base_name:
     print("❌ BASE_NAME 환경 변수가 설정되지 않았습니다.")
@@ -51,7 +52,7 @@ async def result(request: Request):
         data.save_to_json(output_dir="outputs")
 
         # 📌 다운로드할 파일 리스트 (파일 존재 여부 체크 후 안전하게 처리)
-        fzp_file = next((f for f in available_files if f.endswith(".fzp")), None)
+        fzp_file = f"{fzp_base_name}.fzp" if f"{fzp_base_name}.fzp" in available_files else None
         xlsx_file = f"{base_name}.xlsx" if f"{base_name}.xlsx" in available_files else None
         raw_xlsx_file = f"{base_name}_Raw.xlsx" if f"{base_name}_Raw.xlsx" in available_files else None
 
