@@ -52,6 +52,7 @@ class ExcelFileHandler(FileSystemEventHandler):
         env = os.environ.copy()
         env["BASE_NAME"] = base_name
         env["FZP_BASE_NAME"] = fzp_base_name 
+        env["PYTHONPATH"] = os.path.dirname(__file__)
 
         # 서버 URL 출력
         server_url = f"http://{HOST}:{PORT}"
@@ -60,6 +61,7 @@ class ExcelFileHandler(FileSystemEventHandler):
         # `uvicorn` 실행
         process = subprocess.Popen(
             ["uvicorn", "server.main:app", "--reload", "--host", HOST, "--port", str(PORT)],
+            cwd=os.path.dirname(__file__),
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
