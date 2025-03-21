@@ -59,7 +59,7 @@ class ExcelFileHandler(FileSystemEventHandler):
 
         # `uvicorn` 실행
         process = subprocess.Popen(
-            ["poetry", "run", "uvicorn", "server.main:app", "--reload", "--host", HOST, "--port", str(PORT)],
+            ["uvicorn", "server.main:app", "--reload", "--host", HOST, "--port", str(PORT)],
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
