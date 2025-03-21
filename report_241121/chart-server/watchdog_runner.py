@@ -43,8 +43,8 @@ class ExcelFileHandler(FileSystemEventHandler):
 
     def run_python_server(self, base_name):
         
-        # base_name에서 `_Los` 제거하여 fzp_base_name 생성
-        fzp_base_name = re.sub(r'_Los.*$', '', base_name)
+        # base_name에서 fzp_base_name 추출
+        fzp_base_name = base_name
         
         print(f"🔄 Python 리포팅 서버 실행 중... (파일: {fzp_base_name}.fzp, {base_name}.xlsx, {base_name}_Raw.xlsx)")
 
